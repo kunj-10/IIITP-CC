@@ -4,11 +4,11 @@ import cors from 'cors';
 import path from 'path';
 import { ENV } from './config/env';
 import routes from './routes';
-import { Database } from './database/Database';
+import { DatabaseManager } from './database/Database';
 
 const app = express();
 
-Database.getInstance();
+DatabaseManager.getInstance();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
