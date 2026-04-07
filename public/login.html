@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization Server Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #e9ecef; margin: 0; }
+        .login-container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { margin-top: 0; color: #333; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-size: 14px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #28a745; border: none; color: white; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .help-text { font-size: 12px; color: #888; text-align: center; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Sign In to Authorize</h2>
+        <form action="/login" method="POST">
+            <input type="hidden" id="original_url" name="original_url" value="">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required value="admin">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required value="password">
+            </div>
+            <button type="submit">Sign In Allow Access</button>
+        </form>
+        <p class="help-text">Use <strong>admin</strong> and <strong>password</strong></p>
+    </div>
+    
+    <script>
+        // We capture the original URL parameters so we know where to bounce the user back after login
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('redirect_uri')) {
+            document.getElementById('original_url').value = params.get('redirect_uri');
+        }
+    </script>
+</body>
+</html>

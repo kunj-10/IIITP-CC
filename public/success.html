@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client App - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; margin-top: 50px; }
+        .dashboard-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 80%; max-width: 600px; }
+        h1 { color: #28a745; margin-top: 0; }
+        pre { background: #333; color: lime; padding: 15px; border-radius: 6px; overflow-x: auto; }
+        .btn { display: inline-block; padding: 10px 20px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-card">
+        <h1>Authorization Successful!</h1>
+        <p>The client app received an OAuth 2.0 Access Token.</p>
+        <p>Token: <code id="token-display"></code></p>
+        
+        <h2>Protected Data (from Resource Server)</h2>
+        <p>Fetching protected data using the access token...</p>
+        <pre id="data-container">Loading...</pre>
+
+        <a href="/" class="btn" onclick="document.cookie='client_access_token=; Max-Age=-99999999;';">Logout / Start Over</a>
+    </div>
+
+    <script>
+        // Extract token from cookie (simulate client storage)
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        const token = getCookie('client_access_token');
+
+        if (!token) {
+            document.getElementById('data-container').textContent = 'Error: No access token found in cookies.';
+        } else {
+            document.getElementById('token-display').textContent = token;
+            
+            // Make the authenticated request to the Resource Server
+            fetch('/api/protected-data', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('data-container').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(err => {
+                document.getElementById('data-container').textContent = `Failed to fetch data: ${err}`;
+            });
+        }
+    </script>
+</body>
+</html>
